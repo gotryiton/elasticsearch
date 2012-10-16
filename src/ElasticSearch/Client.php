@@ -141,7 +141,14 @@ class Client {
             throw new Exception("Cant create mapping due to type constraint mismatch");
         }
 
-        return $this->request(array('_mapping'), 'PUT', $mapping->export(), true);
+        if (isset($type)) {
+            $body = array($type => $mapping->export());
+        }
+        else {
+            $body = $mapping->export();
+        }
+
+        return $this->request(array('_mapping'), 'PUT', $body, true);
     }
 
     protected function passesTypeConstraint($constraint) {
